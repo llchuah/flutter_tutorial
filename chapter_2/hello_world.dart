@@ -1,9 +1,18 @@
 void main() {
-	helloDart();
+	List<String> greetings = [
+		'World',
+		'Mars',
+		'Oregon',
+		'Barry',
+		'David Bowie',
+	];
+	for (var name in greetings) {
+		helloDart(name);
+	}
 }
 
-void helloDart() {
-	print('Hello, Dart!');
+void helloDart(String name) {
+	print('Hello, $name');
 }
 
 

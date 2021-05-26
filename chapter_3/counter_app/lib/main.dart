@@ -45,6 +45,25 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+// Exercise 3.5.2 Example of composition
+class PanicButton extends StatelessWidget {
+  	final Widget display;
+	final VoidCallback onPressed;
+	
+	// This widget's config is passed in to it, including the widget to disp. Imagine the disp passed in is Text("Panic")
+	PanicButton ({this.display, this.onPressed});
+		
+	Widget build(BuildContext context) {
+		RaisedButton (
+			color: Colors.red,  // sets the button's background color to red
+			child: display, 	// this text widget is passed in from the parent.
+			onPressed: onPressed, // this cb is passed in as well. Makes it flexi. Doesn't care about the cb and isn't tied to any certain function.
+								  // Only cares about displaying a button & telling its parents when that button is pressed (via cb)
+		);
+	}	
+}
+  
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
@@ -66,7 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
 	setState(() => _counter--); 
   }
   
-  
+  void _resetCounter() {
+	setState(() => _counter = 0);
+  }	  
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +123,26 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+		  // Add container widget around the image asset Cp 3.6.9	
+		  Container(
+			// Puts space btwn widgets. EdgeInsets.only constructor tells Flutter where to add the margin (100 pixels of margin below this widget)
+			margin: EdgeInsets.only(bottom: 100.0), 
+			// Adds space around the current widget. EdgeInsets.all puts space on all sides
+			padding: EdgeInsets.all(8.0),
+			// Pass decoration a class called BoxDecoration which decorates boxes
+			decoration: BoxDecoration(
+				// Sets the background color
+				color: Colors.blue.withOpacity(0.25),
+				// BorderRadius has multiple constructors:use circular when you want to curve all 4 corners of the box
+				borderRadius: BorderRadius.circular(4.0), 
+			),
+            //Add Image widget to Column widget's children
+			child: Image.asset(		//Passes the image in to the child property
+				'flutter_logo_1080.png',
+				width: 100.0,
+			),
+		  ),	
+			Text(
               'You have pushed the button this many times:',
             ),
             Text(
@@ -112,17 +152,37 @@ class _MyHomePageState extends State<MyHomePage> {
 			//Exercise 3.4.1 L onPressed is a propery on a button that expects
 			// a callback. By passing in a callback, we manage state in this
 			//parent widget (another common pattern)
-			RaisedButton (
-				child: Text("Decrement Counter"),
-				onPressed: _decrementCounter,
+			Row(
+				mainAxisAlignment: MainAxisAlignment.spaceAround, //uses the spaceAround alignment option
+				children: <Widget>[
+					RaisedButton (
+						color: Colors.red,
+						child: Text(
+							"Decrement",
+							style: TextStyle(color: Colors.white),
+						),
+						onPressed: _decrementCounter,
+					),
+					RaisedButton (
+						color: Colors.green,
+						child: Text(
+							"Increment",
+							style: TextStyle(color: Colors.white),
+						),
+						onPressed: _incrementCounter,
+					),			
+				],
 			),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        //onPressed: _incrementCounter,
+		onPressed: _resetCounter,
+        //tooltip: 'Increment',
+        tooltip: 'Reset Counter',
+		//child: Icon(Icons.add),
+		child: Icon(Icons.refresh),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
